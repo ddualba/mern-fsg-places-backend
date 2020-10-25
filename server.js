@@ -9,7 +9,7 @@ app.use(express.json({ extended: false }));
 const PORT = process.env.PORT || 5000;
 
 //Define Routes
-app.use(placesRoutes);
+app.use('/api/places', placesRoutes);
 // app.use('/api/users', require('./routes/api/users'));
 
 app.listen(PORT, () => console.log(`Server started on Port ${PORT}`));
