@@ -8,8 +8,15 @@ const router = express.Router();
 router.get('/:pid', placesControllers.getPlaceById);
 
 // Get places by userId
-router.get('/user/:uid', placesControllers.getPlaceByUserId);
+router.get('/user/:uid', placesControllers.getPlacesByUserId);
 
+// Create a new Place
 router.post('/', placesControllers.createPlace);
+
+// Update a place by Id
+router.patch('/:pid', placesControllers.updatePlace);
+
+// Delete a place by Id
+router.delete('/:pid', placesControllers.deletePlace);
 
 module.exports = router;
