@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 
 const placesRoutes = require('./routes/places-routes');
+const usersRoutes = require('./routes/users-routes');
 const HttpError = require('./models/http-error');
 
 // Init Middleware (BodyParser now built into express)
@@ -11,7 +12,7 @@ const PORT = process.env.PORT || 5000;
 
 //Define Routes
 app.use('/api/places', placesRoutes);
-// app.use('/api/users', require('./routes/api/users'));
+app.use('/api/users', usersRoutes);
 
 // Handle errors on unsupported routes
 app.use((req, res, next) => {
