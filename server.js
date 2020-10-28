@@ -1,10 +1,14 @@
 const express = require('express');
 const app = express();
-
+const mongoose = require('mongoose');
 require('dotenv').config();
+const connectDB = require('./config/db');
 const placesRoutes = require('./routes/places-routes');
 const usersRoutes = require('./routes/users-routes');
 const HttpError = require('./models/http-error');
+
+// Connect Database
+connectDB();
 
 // Init Middleware (BodyParser now built into express)
 app.use(express.json({ extended: false }));
