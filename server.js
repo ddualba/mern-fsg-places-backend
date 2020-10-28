@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 
+require('dotenv').config();
 const placesRoutes = require('./routes/places-routes');
 const usersRoutes = require('./routes/users-routes');
 const HttpError = require('./models/http-error');
@@ -8,7 +9,7 @@ const HttpError = require('./models/http-error');
 // Init Middleware (BodyParser now built into express)
 app.use(express.json({ extended: false }));
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5500;
 
 //Define Routes
 app.use('/api/places', placesRoutes);
