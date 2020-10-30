@@ -26,7 +26,7 @@ const signup = async (req, res, next) => {
     );
   }
 
-  const { name, email, password, places } = req.body;
+  const { name, email, password } = req.body;
 
   let existingUser;
   try {
@@ -53,7 +53,7 @@ const signup = async (req, res, next) => {
     image:
       'https://www.clipartmax.com/png/small/171-1717870_stockvader-predicted-cron-for-may-user-profile-icon-png.png',
     password,
-    places
+    places: []
   });
 
   try {

@@ -3,21 +3,24 @@ const { validationResult } = require('express-validator');
 
 const HttpError = require('../models/http-error');
 const getCoordsForAddress = require('../util/location');
+const mongoose = require('mongoose'); // for sessions
 const Place = require('../models/place');
+const User = require('../models/user');
+// const mongooseUniqueValidator = require('mongoose-unique-validator');
 
-let DUMMY_PLACES = [
-  {
-    id: 'p1',
-    title: 'Empire State Building',
-    description: 'One of the most famous sky scrapers in the world!',
-    location: {
-      lat: 40.7484474,
-      lng: -73.9871516
-    },
-    address: '20 W 34th St, New York, NY 10001',
-    creator: 'u1'
-  }
-];
+// let DUMMY_PLACES = [
+//   {
+//     id: 'p1',
+//     title: 'Empire State Building',
+//     description: 'One of the most famous sky scrapers in the world!',
+//     location: {
+//       lat: 40.7484474,
+//       lng: -73.9871516
+//     },
+//     address: '20 W 34th St, New York, NY 10001',
+//     creator: 'u1'
+//   }
+// ];
 
 const getPlaceById = async (req, res, next) => {
   const placeId = req.params.pid; // {pid: 'p1'}
@@ -101,8 +104,30 @@ const createPlace = async (req, res, next) => {
     creator
   });
 
+  let user;
   try {
-    await createdPlace.save();
+    user = await User.findById(creator);
+  } catch (err) {
+    const error = new HttpError(
+      'Creating place failed, please try again.',
+      500
+    );
+    return next(error);
+  }
+
+  if (!user) {
+    const error = new HttpError('Could not find user for provided id', 400);
+    return next(error);
+  }
+
+  // save place and add place to user
+  try {
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+    await createdPlace.save({ session: sess });
+    user.places.push(createdPlace);
+    await user.save({ session: sess });
+    await sess.commitTransaction();
   } catch (err) {
     const error = new HttpError(
       'Creating place failed, please try again.',
